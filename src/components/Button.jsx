@@ -14,7 +14,7 @@ const Button = ({ publish }) => {
     stopPublishing(); // safety
     intervalRef.current = setInterval(() => {
       publish(linear, angular);
-    }, 100); // 10 Hz
+    }, 100);
   };
 
   const stopPublishing = () => {

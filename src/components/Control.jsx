@@ -9,7 +9,7 @@ const Control = () => {
 
   useEffect(() => {
     const ros = new ROSLIB.Ros({
-      url: "ws://127.0.0.1:9090",
+      url: "ws://10.147.109.98:9090",
     });
 
     ros.on("connection", () => {
@@ -37,12 +37,10 @@ const Control = () => {
   return (
     <div className="h-[30vh] w-[30vw] bg-amber-600 rounded-2xl flex justify-around items-center p-4">
       <div className=" w-1/2 h-full md:w-60 flex justify-center items-center">
-
-      <JoyStick publish={publish} />
+        <JoyStick publish={publish} />
       </div>
       <div className=" w-1/2 h-full flex justify-center items-center">
-
-      <Button publish={publish} />
+        <Button publish={publish} />
       </div>
     </div>
   );
