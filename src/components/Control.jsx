@@ -9,7 +9,7 @@ const Control = () => {
 
   useEffect(() => {
     const ros = new ROSLIB.Ros({
-      url: "ws://10.147.109.98:9090",
+      url: "ws://192.168.1.3:9090",
     });
 
     ros.on("connection", () => {

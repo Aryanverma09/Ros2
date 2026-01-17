@@ -4,9 +4,8 @@ const Display = () => {
   return (
     <div className="h-[60vh] w-[80vw] bg-amber-300 rounded-2xl flex justify-center items-center overflow-hidden">
       <img
-        src="http://localhost:8080/stream?topic=camera/image_raw&transport=compressed"
-        alt="TurtleBot3 Camera"
-        className="h-full w-full object-cover rounded-2xl"
+        src="http://192.168.1.3:8080/stream?topic=camera/image_raw/compressed"
+        className="h-full w-full object-cover"
       />
     </div>
   );
