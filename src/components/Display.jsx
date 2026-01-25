@@ -2,11 +2,21 @@ import React from "react";
 
 const Display = () => {
   return (
-    <div className="h-[60vh] w-[80vw] bg-amber-300 rounded-2xl flex justify-center items-center overflow-hidden">
-      <img
-        src="http://192.168.1.3:8080/stream?topic=camera/image_raw/compressed"
-        className="h-full w-full object-cover"
-      />
+    <div className="flex justify-center items-center gap-5">
+      <div className="h-[50vh] w-[35vw] border-2 rounded-2xl flex justify-center items-center overflow-hidden">
+        <img
+        alt="Camera feed"
+          src="http://localhost:8080/stream?topic=camera/image_raw&transport=compressed"
+          className="h-full w-full object-cover"
+        />
+      </div>
+      <div className="h-[50vh] w-[35vw] border-2 rounded-2xl flex justify-center items-center overflow-hidden">
+        <img
+        alt="Map"
+          src="http://localhost:8080/stream?topic=camera/image_raw&transport=compressed"
+          className="h-full w-full object-cover"
+        />
+      </div>
     </div>
   );
 };

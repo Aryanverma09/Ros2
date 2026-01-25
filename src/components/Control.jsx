@@ -9,7 +9,7 @@ const Control = () => {
 
   useEffect(() => {
     const ros = new ROSLIB.Ros({
-      url: "ws://192.168.1.3:9090",
+      url: "ws://localhost:9090",
     });
 
     ros.on("connection", () => {
@@ -35,7 +35,7 @@ const Control = () => {
   };
 
   return (
-    <div className="h-[30vh] w-[30vw] bg-amber-600 rounded-2xl flex justify-around items-center p-4">
+    <div className="h-[30vh] w-[30vw] bg-gray-200 shadow-2xl rounded-2xl flex justify-around items-center p-4">
       <div className=" w-1/2 h-full md:w-60 flex justify-center items-center">
         <JoyStick publish={publish} />
       </div>

@@ -1,14 +1,12 @@
-import React from 'react'
-import Display from './components/Display'
-import Control from './components/Control'
+import React from "react";
+import Dashboard from "./pages/Dashboard";
 
 const App = () => {
   return (
-    <div className='h-screen w-screen bg-blue-500 flex flex-col justify-center items-center gap-5' >
-      <Display/>
-      <Control/>
+    <div className="h-screen w-[75vw] bg-blue-100 flex flex-col justify-center items-center gap-5">
+      <Dashboard />
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;

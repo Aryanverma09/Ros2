@@ -44,8 +44,8 @@ const JoyStick = ({ publish }) => {
     <div className="flex justify-center items-center">
       <Joystick
         size={120}
-        baseColor="#ddd"
-        stickColor="#22c55e"
+        baseColor="#000"
+        stickColor="#fff"
         move={handleMove}
         stop={handleStop}
       />
