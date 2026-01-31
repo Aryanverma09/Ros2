@@ -35,51 +35,65 @@ const Button = ({ publish }) => {
 
   /* ================= CONTROLLER BINDING ================= */
 
-  useEffect(() => {
-    let animationId;
+useEffect(() => {
+  let animationId;
 
-    const loop = () => {
-      const gamepads = navigator.getGamepads();
-      const gp = gamepads[0]; // first controller
+  const loop = () => {
+    const gp = navigator.getGamepads()[0];
 
-      if (gp) {
-        const x = gp.axes[0]; // left stick X
-        const y = gp.axes[1]; // left stick Y
-        const deadzone = 0.25;
+    if (gp) {
+      const deadzone = 0.25;
 
-        // FORWARD / BACKWARD
-        if (y < -deadzone) {
-          startPublishing(1, 0);
-        } 
-        else if (y > deadzone) {
-          startPublishing(-1, 0);
-        }
+      // 🎮 Buttons
+      const A = gp.buttons[0]?.pressed; // Backward
+      const B = gp.buttons[1]?.pressed; // Rotate Right
+      const X = gp.buttons[2]?.pressed; // Rotate Left
+      const Y = gp.buttons[3]?.pressed; // Forward
 
-        // LEFT / RIGHT TURN
-        else if (x < -deadzone) {
-          startPublishing(0, 1);
-        } 
-        else if (x > deadzone) {
-          startPublishing(0, -1);
-        }
+      const x = gp.axes[0]; // Left stick X
+      const y = gp.axes[1]; // Left stick Y
 
-        // STOP (B / Circle)
-        else if (gp.buttons[1]?.pressed) {
-          stopPublishing();
-        }
-
-        // IDLE
-        else {
-          stopPublishing();
-        }
+      // 🔥 BUTTON PRIORITY
+      if (Y) {
+        startPublishing(1, 0);       // Forward
+      }
+      else if (A) {
+        startPublishing(-1, 0);      // Backward
+      }
+      else if (X) {
+        startPublishing(0, 1);       // Rotate Left
+      }
+      else if (B) {
+        startPublishing(0, -1);      // Rotate Right
       }
 
-      animationId = requestAnimationFrame(loop);
-    };
+      // 🕹️ JOYSTICK FALLBACK
+      else if (y < -deadzone) {
+        startPublishing(1, 0);
+      } 
+      else if (y > deadzone) {
+        startPublishing(-1, 0);
+      }
+      else if (x < -deadzone) {
+        startPublishing(0, 1);
+      } 
+      else if (x > deadzone) {
+        startPublishing(0, -1);
+      }
 
-    loop();
-    return () => cancelAnimationFrame(animationId);
-  }, []);
+      // 🧍 IDLE
+      else {
+        stopPublishing();
+      }
+    }
+
+    animationId = requestAnimationFrame(loop);
+  };
+
+  loop();
+  return () => cancelAnimationFrame(animationId);
+}, []);
+
 
   /* ================= UI ================= */
 
