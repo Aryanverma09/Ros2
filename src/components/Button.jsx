@@ -55,30 +55,30 @@ useEffect(() => {
 
       // 🔥 BUTTON PRIORITY
       if (Y) {
-        startPublishing(1, 0);       // Forward
+        startPublishing(0.5, 0);       // Forward
       }
       else if (A) {
-        startPublishing(-1, 0);      // Backward
+        startPublishing(-0.5, 0);      // Backward
       }
       else if (X) {
-        startPublishing(0, 1);       // Rotate Left
+        startPublishing(0,0.5);       // Rotate Left
       }
       else if (B) {
-        startPublishing(0, -1);      // Rotate Right
+        startPublishing(0, -0.5);      // Rotate Right
       }
 
       // 🕹️ JOYSTICK FALLBACK
       else if (y < -deadzone) {
-        startPublishing(1, 0);
+        startPublishing(0.5, 0);
       } 
       else if (y > deadzone) {
-        startPublishing(-1, 0);
+        startPublishing(-0.5, 0);
       }
       else if (x < -deadzone) {
-        startPublishing(0, 1);
+        startPublishing(0, 0.5);
       } 
       else if (x > deadzone) {
-        startPublishing(0, -1);
+        startPublishing(0, -0.5);
       }
 
       // 🧍 IDLE
@@ -103,7 +103,7 @@ useEffect(() => {
       {/* UP */}
       <button
         className="bg-black h-14 w-14 rounded-full flex justify-center items-center"
-        onMouseDown={() => startPublishing(1, 0)}
+        onMouseDown={() => startPublishing(0.5, 0)}
         onMouseUp={stopPublishing}
         onMouseLeave={stopPublishing}
       >
@@ -114,7 +114,7 @@ useEffect(() => {
       <div className="w-full flex justify-around items-center">
         <button
           className="bg-black h-14 w-14 rounded-full flex justify-center items-center"
-          onMouseDown={() => startPublishing(0, 1)}
+          onMouseDown={() => startPublishing(0, 0.5)}
           onMouseUp={stopPublishing}
           onMouseLeave={stopPublishing}
         >
@@ -130,7 +130,7 @@ useEffect(() => {
 
         <button
           className="bg-black h-14 w-14 rounded-full flex justify-center items-center"
-          onMouseDown={() => startPublishing(0, -1)}
+          onMouseDown={() => startPublishing(0, -0.5)}
           onMouseUp={stopPublishing}
           onMouseLeave={stopPublishing}
         >
@@ -141,7 +141,7 @@ useEffect(() => {
       {/* DOWN */}
       <button
         className="bg-black h-14 w-14 rounded-full flex justify-center items-center"
-        onMouseDown={() => startPublishing(-1, 0)}
+        onMouseDown={() => startPublishing(-0.5, 0)}
         onMouseUp={stopPublishing}
         onMouseLeave={stopPublishing}
       >

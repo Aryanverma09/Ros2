@@ -1,7 +1,7 @@
 import React from "react";
 import Display from "../components/Display";
 import Control from "../components/Control";
-import LeftBar from "../components/LeftBar";
+import RightBar from "../components/RightBar";
 
 const Dashboard = () => {
   return (
@@ -14,7 +14,9 @@ const Dashboard = () => {
         <Display />
         <Control />
       </div>
-        <LeftBar />
+      <div className="w-[20vw] h-screen">
+        <RightBar />
+      </div>
     </div>
   );
 };

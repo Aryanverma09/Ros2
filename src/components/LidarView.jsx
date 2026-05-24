@@ -40,7 +40,7 @@ const LidarView = () => {
 
       ctx.fillStyle = "black";
 
-      const scale = 80; // 🔥 increase to zoom (60–80 if needed)
+      const scale = 60; // zoom (60–80 if needed)
 
       msg.ranges.forEach((range, i) => {
         if (range > msg.range_min && range < msg.range_max) {

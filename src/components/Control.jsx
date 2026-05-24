@@ -2,6 +2,9 @@ import React, { useEffect, useRef } from "react";
 import * as ROSLIB from "roslib";
 import Button from "./Button";
 import JoyStick from "./JoyStick";
+import SaveMap from "./buttons /SaveMap";
+import AutoNavigate from "./buttons /AutoNavigate";
+
 
 const Control = () => {
   const rosRef = useRef(null);
@@ -35,12 +38,16 @@ const Control = () => {
   };
 
   return (
-    <div className="h-[30vh] w-[30vw] bg-gray-200 shadow-2xl rounded-2xl flex justify-around items-center p-4">
-      <div className=" w-1/2 h-full md:w-60 flex justify-center items-center">
+    <div className="h-[30vh] w-[50vw] bg-gray-200 shadow-2xl rounded-2xl flex justify-around items-center p-4">
+      <div className=" w-1/3 h-full bg-amber-200 md:w-60 flex justify-center items-center">
         <JoyStick publish={publish} />
       </div>
-      <div className=" w-1/2 h-full flex justify-center items-center">
+      <div className=" w-1/3 h-full bg-amber-400 flex justify-center items-center">
         <Button publish={publish} />
+      </div>
+      <div className=" w-1/3 h-full  flex justify-center items-center">
+        <SaveMap/>
+        <AutoNavigate/>
       </div>
     </div>
   );

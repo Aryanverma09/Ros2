@@ -1,8 +1,8 @@
 import React, { useRef } from "react";
 import { Joystick } from "react-joystick-component";
 
-const MAX_LINEAR = 1.0;    // Forward / backward speed
-const MAX_ANGULAR = 1.0;  // Left / right rotation speed
+const MAX_LINEAR = 0.5;    // Forward / backward speed
+const MAX_ANGULAR = 0.5;  // Left / right rotation speed
 const DEAD_ZONE = 0.15;   // Ignore small joystick movement
 
 const JoyStick = ({ publish }) => {
