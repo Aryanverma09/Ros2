@@ -3,6 +3,43 @@ import { exec } from "child_process";
 
 const router = express.Router();
 
+
+// ================= AUTO EXPLORE =================
+router.post("/navigate", (req, res) => {
+
+  const command = `
+  docker exec ros2_container bash -c "
+    source /opt/ros/humble/setup.bash &&
+    source install/setup.bash &&
+
+    ros2 launch explore_lite explore.launch.py
+  "
+  `;
+
+  exec(command, (error, stdout, stderr) => {
+
+    if (error) {
+
+      console.log(error);
+
+      return res.status(500).json({
+        success: false,
+        message: "Auto exploration failed",
+      });
+    }
+
+    console.log(stdout);
+    console.log(stderr);
+
+    res.json({
+      success: true,
+      message: "Auto exploration started",
+    });
+  });
+});
+
+
+// ================= NAV2 GOAL =================
 router.post("/nav-goal", (req, res) => {
 
   const { x, y, z, w } = req.body;
@@ -17,7 +54,7 @@ router.post("/nav-goal", (req, res) => {
     '{
       pose: {
         header: {
-          frame_id: \"map\"
+          frame_id: \\"map\\"
         },
         pose: {
           position: {
@@ -56,4 +93,5 @@ router.post("/nav-goal", (req, res) => {
     });
   });
 });
+
 export default router;
