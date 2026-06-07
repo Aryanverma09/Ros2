@@ -3,8 +3,7 @@ import * as ROSLIB from "roslib";
 import Button from "./Button";
 import JoyStick from "./JoyStick";
 import SaveMap from "./buttons /SaveMap";
-import AutoNavigate from "./buttons /AutoNavigate";
-
+import AutoNavigate from "./buttons /WorkingButtons";
 
 const Control = () => {
   const rosRef = useRef(null);
@@ -38,18 +37,20 @@ const Control = () => {
   };
 
   return (
-    <div className="h-[30vh] w-[50vw] bg-gray-200 shadow-2xl rounded-2xl flex justify-around items-center p-4">
-      <div className=" w-1/3 h-full bg-amber-200 md:w-60 flex justify-center items-center">
+    <section className="flex w-full max-w-[900px] flex-col items-center justify-center gap-5 rounded-2xl bg-gray-200 p-4 shadow-2xl sm:p-5 md:flex-row md:gap-4 lg:w-[60vw] xl:w-[50vw]">
+      <div className="flex w-full items-center justify-center md:w-1/3">
         <JoyStick publish={publish} />
       </div>
-      <div className=" w-1/3 h-full bg-amber-400 flex justify-center items-center">
+
+      <div className="flex w-full items-center justify-center md:w-1/3">
         <Button publish={publish} />
       </div>
-      <div className=" w-1/3 h-full  flex justify-center items-center">
-        <SaveMap/>
-        <AutoNavigate/>
+
+      <div className="flex w-full flex-col items-center justify-center gap-3 md:w-1/3">
+        <SaveMap />
+        <AutoNavigate />
       </div>
-    </div>
+    </section>
   );
 };
 

@@ -1,9 +1,9 @@
 import React, { useRef } from "react";
 import { Joystick } from "react-joystick-component";
 
-const MAX_LINEAR = 0.5;    // Forward / backward speed
-const MAX_ANGULAR = 0.5;  // Left / right rotation speed
-const DEAD_ZONE = 0.15;   // Ignore small joystick movement
+const MAX_LINEAR = 1.5;
+const MAX_ANGULAR = 1.5;
+const DEAD_ZONE = 0.15;
 
 const JoyStick = ({ publish }) => {
   const lastSent = useRef({ x: 0, z: 0 });
@@ -11,23 +11,16 @@ const JoyStick = ({ publish }) => {
   const handleMove = (event) => {
     if (!publish) return;
 
-    // Normalize joystick values (-1 to 1)
-    let normX = event.x ;
-    let normY = event.y ;
+    let normX = event.x;
+    let normY = event.y;
 
-    // Dead zone to prevent jitter
     if (Math.abs(normX) < DEAD_ZONE) normX = 0;
     if (Math.abs(normY) < DEAD_ZONE) normY = 0;
 
-    // Correct ROS directions
-    const linearX = normY * MAX_LINEAR;     // UP → forward
-    const angularZ = -normX * MAX_ANGULAR;  // LEFT → left
+    const linearX = normY * MAX_LINEAR;
+    const angularZ = -normX * MAX_ANGULAR;
 
-    // Avoid sending duplicate values
-    if (
-      lastSent.current.x === linearX &&
-      lastSent.current.z === angularZ
-    ) {
+    if (lastSent.current.x === linearX && lastSent.current.z === angularZ) {
       return;
     }
 
@@ -37,11 +30,11 @@ const JoyStick = ({ publish }) => {
 
   const handleStop = () => {
     lastSent.current = { x: 0, z: 0 };
-    publish(0, 0); // STOP robot
+    publish(0, 0);
   };
 
   return (
-    <div className="flex justify-center items-center">
+    <div className="flex min-h-[140px] w-full items-center justify-center">
       <Joystick
         size={120}
         baseColor="#000"

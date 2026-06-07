@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import MapView from "../MapView";
+
 const AutoNavigate = () => {
   const [goalMode, setGoalMode] = useState(false);
 
@@ -42,7 +43,6 @@ const AutoNavigate = () => {
   const handleExecuteGoal = async () => {
     try {
       for (const point of points) {
-        // PIXEL → ROS COORDINATES
         const x = ((point.px / 700) * 10 - 5).toFixed(2);
 
         const y = (((500 - point.py) / 500) * 10 - 5).toFixed(2);
@@ -76,19 +76,19 @@ const AutoNavigate = () => {
   };
 
   return (
-    <div className="p-4">
+    <div className="w-full">
       {/* BUTTONS */}
-      <div className="flex gap-4">
+      <div className="flex w-full flex-col items-center justify-center gap-3">
         <button
           onClick={handleAutoExplore}
-          className="bg-blue-500 text-white px-4 py-2 rounded"
+          className="w-full max-w-[180px] rounded-lg bg-blue-500 px-4 py-2 text-sm font-semibold text-white shadow-md transition hover:bg-blue-600"
         >
           Auto Explore
         </button>
 
         <button
           onClick={handleSetGoal}
-          className="bg-green-500 text-white px-4 py-2 rounded"
+          className="w-full max-w-[180px] rounded-lg bg-green-500 px-4 py-2 text-sm font-semibold text-white shadow-md transition hover:bg-green-600"
         >
           Set Goal
         </button>
@@ -96,61 +96,67 @@ const AutoNavigate = () => {
 
       {/* GOAL MODAL */}
       {goalMode && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-white p-4 rounded-xl shadow-xl">
-            {/* MAP */}
-            <div
-              onClick={handleMapClick}
-              className="relative w-[700px] h-[500px] border rounded overflow-hidden cursor-crosshair"
-            >
-              {/* MAP VIEW */}
-              <MapView isStatic />
+        <div className="fixed inset-0 z-[9997] flex items-center justify-center bg-black/40 p-3 backdrop-blur-sm">
+          <div className="max-h-[95dvh] w-full max-w-[760px] overflow-y-auto rounded-2xl bg-white p-4 shadow-2xl">
+            <h2 className="mb-3 text-center text-lg font-bold text-gray-900">
+              Select Navigation Goals
+            </h2>
 
-              {/* ROBOT */}
-              <div className="absolute top-1/2 left-1/2 w-6 h-6 bg-blue-500 rounded-full border-4 border-white -translate-x-1/2 -translate-y-1/2 z-20" />
+            {/* MAP SCROLL WRAPPER */}
+            <div className="w-full overflow-x-auto rounded-xl border bg-gray-100 p-2">
+              <div
+                onClick={handleMapClick}
+                className="relative h-[500px] w-[700px] cursor-crosshair overflow-hidden rounded-lg border bg-white"
+              >
+                {/* MAP VIEW */}
+                <MapView isStatic />
 
-              {/* MULTIPLE GOALS */}
-              {points.map((point, index) => (
-                <div
-                  key={index}
-                  className="absolute flex items-center justify-center z-30"
-                  style={{
-                    left: point.px - 12,
-                    top: point.py - 12,
-                  }}
-                >
-                  <div className="w-6 h-6 bg-red-500 rounded-full border-2 border-white" />
+                {/* ROBOT */}
+                <div className="absolute left-1/2 top-1/2 z-20 h-6 w-6 -translate-x-1/2 -translate-y-1/2 rounded-full border-4 border-white bg-blue-500" />
 
-                  <span className="absolute text-white text-xs font-bold">
-                    {index + 1}
-                  </span>
-                </div>
-              ))}
+                {/* MULTIPLE GOALS */}
+                {points.map((point, index) => (
+                  <div
+                    key={index}
+                    className="absolute z-30 flex items-center justify-center"
+                    style={{
+                      left: point.px - 12,
+                      top: point.py - 12,
+                    }}
+                  >
+                    <div className="h-6 w-6 rounded-full border-2 border-white bg-red-500" />
+
+                    <span className="absolute text-xs font-bold text-white">
+                      {index + 1}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
 
             {/* ACTION BUTTONS */}
-            <div className="flex justify-between mt-4">
+            <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <button
                 onClick={() => setPoints([])}
-                className="px-4 py-2 bg-yellow-400 rounded"
+                className="rounded-lg bg-yellow-400 px-4 py-2 font-semibold text-black"
               >
                 Clear
               </button>
 
-              <div className="flex gap-3">
+              <div className="flex flex-col gap-3 sm:flex-row">
                 <button
                   onClick={() => {
                     setGoalMode(false);
                     setPoints([]);
                   }}
-                  className="px-4 py-2 bg-gray-300 rounded"
+                  className="rounded-lg bg-gray-300 px-4 py-2 font-semibold text-gray-900"
                 >
                   Cancel
                 </button>
 
                 <button
                   onClick={handleExecuteGoal}
-                  className="px-4 py-2 bg-green-500 text-white rounded"
+                  className="rounded-lg bg-green-500 px-4 py-2 font-semibold text-white"
                 >
                   Execute
                 </button>

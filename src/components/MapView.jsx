@@ -13,80 +13,50 @@ const MapView = () => {
   const quaternionToYaw = (q) => {
     const siny = 2 * (q.w * q.z + q.x * q.y);
 
-    const cosy =
-      1 - 2 * (q.y * q.y + q.z * q.z);
+    const cosy = 1 - 2 * (q.y * q.y + q.z * q.z);
 
     return Math.atan2(siny, cosy);
   };
 
   // MAP SCALE + CENTER
   const getTransform = (canvas, info) => {
-    const mapWidth =
-      info.width * info.resolution;
+    const mapWidth = info.width * info.resolution;
 
-    const mapHeight =
-      info.height * info.resolution;
+    const mapHeight = info.height * info.resolution;
 
     const padding = 20;
 
     const scale = Math.min(
-      (canvas.width - padding * 2) /
-        mapWidth,
-
-      (canvas.height - padding * 2) /
-        mapHeight
+      (canvas.width - padding * 2) / mapWidth,
+      (canvas.height - padding * 2) / mapHeight
     );
 
     return {
       scale,
 
-      offsetX:
-        (canvas.width -
-          mapWidth * scale) /
-        2,
+      offsetX: (canvas.width - mapWidth * scale) / 2,
 
-      offsetY:
-        (canvas.height -
-          mapHeight * scale) /
-        2,
+      offsetY: (canvas.height - mapHeight * scale) / 2,
     };
   };
 
   // WORLD → CANVAS
-  const worldToCanvas = (
-    x,
-    y,
-    info,
-    transform
-  ) => {
+  const worldToCanvas = (x, y, info, transform) => {
     const res = info.resolution;
 
-    const mapX =
-      (x - info.origin.position.x) / res;
+    const mapX = (x - info.origin.position.x) / res;
 
-    const mapY =
-      (y - info.origin.position.y) / res;
+    const mapY = (y - info.origin.position.y) / res;
 
     return {
-      x:
-        transform.offsetX +
-        mapX * res * transform.scale,
+      x: transform.offsetX + mapX * res * transform.scale,
 
-      y:
-        transform.offsetY +
-        (info.height - mapY) *
-          res *
-          transform.scale,
+      y: transform.offsetY + (info.height - mapY) * res * transform.scale,
     };
   };
 
   // DRAW ROBOT
-  const drawRobot = (
-    ctx,
-    pose,
-    info,
-    transform
-  ) => {
+  const drawRobot = (ctx, pose, info, transform) => {
     if (!pose) return;
 
     const point = worldToCanvas(
@@ -96,19 +66,11 @@ const MapView = () => {
       transform
     );
 
-    const yaw = quaternionToYaw(
-      pose.orientation
-    );
+    const yaw = quaternionToYaw(pose.orientation);
 
     ctx.beginPath();
 
-    ctx.arc(
-      point.x,
-      point.y,
-      18,
-      0,
-      Math.PI * 2
-    );
+    ctx.arc(point.x, point.y, 18, 0, Math.PI * 2);
 
     ctx.fillStyle = "red";
     ctx.fill();
@@ -142,71 +104,40 @@ const MapView = () => {
     canvas.width = canvas.clientWidth;
     canvas.height = canvas.clientHeight;
 
-    const ctx =
-      canvas.getContext("2d");
+    const ctx = canvas.getContext("2d");
 
     ctx.fillStyle = "#d1d5db";
 
-    ctx.fillRect(
-      0,
-      0,
-      canvas.width,
-      canvas.height
-    );
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     const info = map.info;
 
-    const transform = getTransform(
-      canvas,
-      info
-    );
+    const transform = getTransform(canvas, info);
 
-    const cellSize = Math.max(
-      2,
-      info.resolution * transform.scale
-    );
+    const cellSize = Math.max(2, info.resolution * transform.scale);
 
     // MAP
     for (let y = 0; y < info.height; y++) {
       for (let x = 0; x < info.width; x++) {
-        const value =
-          map.data[x + y * info.width];
+        const value = map.data[x + y * info.width];
 
-        if (value === 0)
-          ctx.fillStyle = "#ffffff";
-
-        else if (value > 65)
-          ctx.fillStyle = "#000000";
-
+        if (value === 0) ctx.fillStyle = "#ffffff";
+        else if (value > 65) ctx.fillStyle = "#000000";
         else continue;
 
         const point = worldToCanvas(
-          info.origin.position.x +
-            x * info.resolution,
-
-          info.origin.position.y +
-            y * info.resolution,
-
+          info.origin.position.x + x * info.resolution,
+          info.origin.position.y + y * info.resolution,
           info,
           transform
         );
 
-        ctx.fillRect(
-          point.x,
-          point.y,
-          cellSize,
-          cellSize
-        );
+        ctx.fillRect(point.x, point.y, cellSize, cellSize);
       }
     }
 
     // ROBOT
-    drawRobot(
-      ctx,
-      robotPoseRef.current,
-      info,
-      transform
-    );
+    drawRobot(ctx, robotPoseRef.current, info, transform);
   };
 
   // ROS
@@ -215,35 +146,25 @@ const MapView = () => {
       url: "ws://localhost:9090",
     });
 
-    ros.on("connection", () =>
-      setStatus("Connected")
-    );
+    ros.on("connection", () => setStatus("Connected"));
 
-    ros.on("error", () =>
-      setStatus("Error")
-    );
+    ros.on("error", () => setStatus("Error"));
 
-    ros.on("close", () =>
-      setStatus("Disconnected")
-    );
+    ros.on("close", () => setStatus("Disconnected"));
 
     // MAP
-    const mapTopic =
-      new ROSLIB.Topic({
-        ros,
-        name: "/map",
-        messageType:
-          "nav_msgs/OccupancyGrid",
-      });
+    const mapTopic = new ROSLIB.Topic({
+      ros,
+      name: "/map",
+      messageType: "nav_msgs/OccupancyGrid",
+    });
 
     // ROBOT POSITION
-    const poseTopic =
-      new ROSLIB.Topic({
-        ros,
-        name: "/odom",
-        messageType:
-          "nav_msgs/Odometry",
-      });
+    const poseTopic = new ROSLIB.Topic({
+      ros,
+      name: "/odom",
+      messageType: "nav_msgs/Odometry",
+    });
 
     mapTopic.subscribe((msg) => {
       mapRef.current = msg;
@@ -251,33 +172,25 @@ const MapView = () => {
     });
 
     poseTopic.subscribe((msg) => {
-      robotPoseRef.current =
-        msg.pose.pose;
+      robotPoseRef.current = msg.pose.pose;
 
       redraw();
     });
 
-    window.addEventListener(
-      "resize",
-      redraw
-    );
+    window.addEventListener("resize", redraw);
 
     return () => {
       mapTopic.unsubscribe();
       poseTopic.unsubscribe();
 
-      window.removeEventListener(
-        "resize",
-        redraw
-      );
+      window.removeEventListener("resize", redraw);
 
       ros.close();
     };
   }, []);
 
   return (
-    <div className="relative h-[50vh] w-[35vw] overflow-hidden rounded-2xl border-2 border-black bg-gray-300">
-      
+    <div className="relative h-[280px] w-full max-w-[680px] overflow-hidden rounded-2xl border-2 border-black bg-gray-300 shadow-lg sm:h-[340px] lg:h-[50vh] lg:w-[45vw] xl:w-[35vw]">
       {/* STATUS */}
       <div className="absolute right-3 top-3 z-10 rounded-full bg-black/80 px-3 py-1 text-xs font-semibold text-white">
         {status}
