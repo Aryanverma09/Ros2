@@ -28,7 +28,7 @@ const MapView = () => {
 
     const scale = Math.min(
       (canvas.width - padding * 2) / mapWidth,
-      (canvas.height - padding * 2) / mapHeight
+      (canvas.height - padding * 2) / mapHeight,
     );
 
     return {
@@ -63,7 +63,7 @@ const MapView = () => {
       pose.position.x,
       pose.position.y,
       info,
-      transform
+      transform,
     );
 
     const yaw = quaternionToYaw(pose.orientation);
@@ -84,10 +84,7 @@ const MapView = () => {
 
     ctx.moveTo(point.x, point.y);
 
-    ctx.lineTo(
-      point.x + Math.cos(-yaw) * 45,
-      point.y + Math.sin(-yaw) * 45
-    );
+    ctx.lineTo(point.x + Math.cos(-yaw) * 45, point.y + Math.sin(-yaw) * 45);
 
     ctx.strokeStyle = "yellow";
     ctx.lineWidth = 5;
@@ -129,7 +126,7 @@ const MapView = () => {
           info.origin.position.x + x * info.resolution,
           info.origin.position.y + y * info.resolution,
           info,
-          transform
+          transform,
         );
 
         ctx.fillRect(point.x, point.y, cellSize, cellSize);
@@ -142,50 +139,110 @@ const MapView = () => {
 
   // ROS
   useEffect(() => {
-    const ros = new ROSLIB.Ros({
-      url: "ws://localhost:9090",
-    });
+    let ros = null;
+    let mapTopic = null;
+    let poseTopic = null;
+    let reconnectTimer = null;
+    let isMounted = true;
 
-    ros.on("connection", () => setStatus("Connected"));
+    const cleanupTopics = () => {
+      try {
+        if (mapTopic) mapTopic.unsubscribe();
+        if (poseTopic) poseTopic.unsubscribe();
+      } catch (error) {
+        console.log(error);
+      }
 
-    ros.on("error", () => setStatus("Error"));
+      mapTopic = null;
+      poseTopic = null;
+    };
 
-    ros.on("close", () => setStatus("Disconnected"));
+    const scheduleReconnect = () => {
+      if (!isMounted || reconnectTimer) return;
 
-    // MAP
-    const mapTopic = new ROSLIB.Topic({
-      ros,
-      name: "/map",
-      messageType: "nav_msgs/OccupancyGrid",
-    });
+      setStatus("Retrying...");
 
-    // ROBOT POSITION
-    const poseTopic = new ROSLIB.Topic({
-      ros,
-      name: "/odom",
-      messageType: "nav_msgs/Odometry",
-    });
+      reconnectTimer = setTimeout(() => {
+        reconnectTimer = null;
+        connectToRos();
+      }, 2000);
+    };
 
-    mapTopic.subscribe((msg) => {
-      mapRef.current = msg;
-      redraw();
-    });
+    const connectToRos = () => {
+      if (!isMounted) return;
 
-    poseTopic.subscribe((msg) => {
-      robotPoseRef.current = msg.pose.pose;
+      setStatus("Connecting...");
 
-      redraw();
-    });
+      ros = new ROSLIB.Ros({
+        url: "ws://localhost:9090",
+      });
+
+      ros.on("connection", () => {
+        if (!isMounted) return;
+
+        setStatus("Connected");
+
+        cleanupTopics();
+
+        // MAP
+        mapTopic = new ROSLIB.Topic({
+          ros,
+          name: "/map",
+          messageType: "nav_msgs/OccupancyGrid",
+        });
+
+        // ROBOT POSITION
+        poseTopic = new ROSLIB.Topic({
+          ros,
+          name: "/odom",
+          messageType: "nav_msgs/Odometry",
+        });
+
+        mapTopic.subscribe((msg) => {
+          mapRef.current = msg;
+          redraw();
+        });
+
+        poseTopic.subscribe((msg) => {
+          robotPoseRef.current = msg.pose.pose;
+          redraw();
+        });
+      });
+
+      ros.on("error", () => {
+        if (!isMounted) return;
+        setStatus("Error");
+      });
+
+      ros.on("close", () => {
+        if (!isMounted) return;
+
+        cleanupTopics();
+        setStatus("Disconnected");
+        scheduleReconnect();
+      });
+    };
+
+    connectToRos();
 
     window.addEventListener("resize", redraw);
 
     return () => {
-      mapTopic.unsubscribe();
-      poseTopic.unsubscribe();
+      isMounted = false;
+
+      if (reconnectTimer) {
+        clearTimeout(reconnectTimer);
+      }
+
+      cleanupTopics();
 
       window.removeEventListener("resize", redraw);
 
-      ros.close();
+      try {
+        if (ros) ros.close();
+      } catch (error) {
+        console.log(error);
+      }
     };
   }, []);
 
