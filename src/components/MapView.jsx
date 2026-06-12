@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as ROSLIB from "roslib";
 
-const MapView = () => {
+const MapView = ({setRosStatus}) => {
   const canvasRef = useRef(null);
 
   const mapRef = useRef(null);
@@ -161,6 +161,7 @@ const MapView = () => {
       if (!isMounted || reconnectTimer) return;
 
       setStatus("Retrying...");
+      setRosStatus("Retrying...");
 
       reconnectTimer = setTimeout(() => {
         reconnectTimer = null;
@@ -172,6 +173,7 @@ const MapView = () => {
       if (!isMounted) return;
 
       setStatus("Connecting...");
+      // setRosStatus("Connecting...");
 
       ros = new ROSLIB.Ros({
         url: "ws://localhost:9090",
@@ -181,6 +183,7 @@ const MapView = () => {
         if (!isMounted) return;
 
         setStatus("Connected");
+        setRosStatus("Connected");
 
         cleanupTopics();
 
@@ -212,6 +215,7 @@ const MapView = () => {
       ros.on("error", () => {
         if (!isMounted) return;
         setStatus("Error");
+        setRosStatus("Error");
       });
 
       ros.on("close", () => {
@@ -219,6 +223,7 @@ const MapView = () => {
 
         cleanupTopics();
         setStatus("Disconnected");
+        setRosStatus("Disconnected");
         scheduleReconnect();
       });
     };
@@ -247,7 +252,7 @@ const MapView = () => {
   }, []);
 
   return (
-    <div className="relative h-[280px] w-full max-w-[680px] overflow-hidden rounded-2xl border-2 border-black bg-gray-300 shadow-lg sm:h-[340px] lg:h-[50vh] lg:w-[45vw] xl:w-[35vw]">
+    <div className="relative h-[280px] w-full max-w-[680px] overflow-hidden rounded-2xl border-2 border-black bg-gray-300 shadow-lg sm:h-[340px] lg:h-[45vh] lg:w-[62vw] xl:w-[55vw]">
       {/* STATUS */}
       <div className="absolute right-3 top-3 z-10 rounded-full bg-black/80 px-3 py-1 text-xs font-semibold text-white">
         {status}
