@@ -1,12 +1,17 @@
 import React from "react";
-import CameraView from "../components/CameraView";
+import CameraView from "./CameraView";
 import MapView from "./MapView";
 
-const Display = ({setRosStatus ,setCameraStatus}) => {
+const Display = ({ setRosStatus, setCameraStatus }) => {
   return (
-    <section className="flex w-full max-w-[1500px] flex-col items-center justify-center gap-4 lg:flex-row  lg:gap-5">
-      <CameraView setCameraStatus={setCameraStatus} />
-      <MapView setRosStatus={setRosStatus} />
+    <section className="grid w-full max-w-[calc(100vw-2rem)] grid-cols-1 gap-5 lg:max-w-[calc(100vw-280px)] xl:grid-cols-2">
+      <div className="min-w-0">
+        <CameraView setCameraStatus={setCameraStatus} />
+      </div>
+
+      <div className="min-w-0">
+        <MapView setRosStatus={setRosStatus} />
+      </div>
     </section>
   );
 };

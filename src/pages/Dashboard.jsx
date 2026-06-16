@@ -1,12 +1,15 @@
 import React, { useState } from "react";
+import { Menu } from "lucide-react";
+
 import Display from "../components/Display";
 import Control from "../components/Control";
-import Setting from "../components/Settings/Setting";
 import BatteryLevel from "../components/battery _level/BatteryLevel";
 import SpeedLevel from "../components/Speed_level/SpeedLevel";
 import FireDetection from "../components/fire_detection/FireDetection";
+import Sidebar from "../components/layout/Sidebar";
 
 const Dashboard = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [rosStatus, setRosStatus] = useState("Connecting...");
   const [cameraStatus, setCameraStatus] = useState("Connecting...");
 
@@ -18,134 +21,114 @@ const Dashboard = () => {
 
   const getStatusColor = (status) => {
     if (status === "Connected") return "bg-green-100 text-green-600";
-    if (status === "Connecting..." || status === "Retrying...")
+    if (status === "Connecting..." || status === "Retrying...") {
       return "bg-yellow-100 text-yellow-600";
+    }
     return "bg-red-100 text-red-600";
   };
 
   const getStatusTextColor = (status) => {
     if (status === "Connected") return "text-green-600";
-    if (status === "Connecting..." || status === "Retrying...")
+    if (status === "Connecting..." || status === "Retrying...") {
       return "text-yellow-600";
+    }
     return "text-red-600";
   };
 
+  const StatusBox = ({ title, status }) => {
+    return (
+      <div className="flex h-[10vh] min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
+        <div className="flex w-full items-center gap-3">
+          <div
+            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-sm ${getStatusColor(
+              status,
+            )}`}
+          >
+            {getStatusIcon(status)}
+          </div>
+
+          <div className="min-w-0">
+            <h2 className="truncate text-sm font-semibold text-slate-700">
+              {title}
+            </h2>
+
+            <p
+              className={`mt-1 truncate text-sm font-bold ${getStatusTextColor(
+                status,
+              )}`}
+            >
+              {status}
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
-    <div className="relative min-h-[100dvh] w-full overflow-x-hidden overflow-y-auto bg-white">
-      <main className="mx-auto flex min-h-[100dvh] w-full max-w-[1500px] flex-col items-center justify-start gap-4 px-3 py-4 pb-28 sm:gap-5 sm:px-5 lg:px-8">
-        {/* Top Navbar */}
-        <div className="flex w-full max-w-[1280px] items-center justify-between rounded-2xl border border-gray-200 bg-black px-4 py-3 shadow-xl sm:px-6 lg:px-8">
-          {/* <img
-            src="/logo/hxr_text_final copy.png"
-            alt="HXR Logo"
-            className="h-14 w-24 shrink-0 rounded-xl object-contain sm:h-16 sm:w-32"
-          /> */}
+    <div className="min-h-screen bg-[#f6f8fb]">
+      <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-          <div className="flex min-w-0 flex-1 items-center justify-center px-3 text-center">
-            <div className="min-w-0">
-              <h1 className="truncate text-sm font-bold text-gray-100 sm:text-lg">
-                Robotics Control Center
-              </h1>
-
-              <p className="truncate text-xs font-medium text-gray-400 sm:text-sm">
-                Robot Dashboard
-              </p>
-            </div>
-          </div>
-
-          <div className="hidden shrink-0 items-center gap-2 rounded-full bg-green-50 px-4 py-2 text-sm font-semibold text-green-600 sm:flex">
-            <span className="h-2.5 w-2.5 rounded-full bg-green-500"></span>
-            System Healthy
-          </div>
-        </div>
-
-        {/* Status Cards */}
-        <div className="grid w-full max-w-[1280px] grid-cols-1 items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-          {/* ROS Connection Card */}
-          <div className="flex min-h-[112px] rounded-2xl border border-gray-200 bg-white p-4 shadow-xl">
-            <div className="flex w-full items-center gap-4">
-              <div
-                className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${getStatusColor(
-                  rosStatus
-                )}`}
+      <main className="min-h-screen w-full lg:pl-[240px]">
+        <div className="w-full px-4 py-5 sm:px-6 lg:px-8">
+          {/* Header */}
+          <header className="flex w-full items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setSidebarOpen(true)}
+                className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 shadow-sm lg:hidden"
               >
-                {getStatusIcon(rosStatus)}
-              </div>
+                <Menu size={22} />
+              </button>
 
-              <div className="min-w-0">
-                <h1 className="truncate text-sm font-semibold text-gray-700">
-                  ROS Connection
+              <div>
+                <h1 className="text-2xl font-bold text-slate-900 sm:text-3xl">
+                  Dashboard
                 </h1>
-
-                <p
-                  className={`truncate text-sm font-bold ${getStatusTextColor(
-                    rosStatus
-                  )}`}
-                >
-                  {rosStatus}
+                <p className="mt-1 text-sm font-medium text-slate-500">
+                  Monitor and control your robot in real time
                 </p>
               </div>
             </div>
-          </div>
 
-          {/* Camera Connection Card */}
-          <div className="flex min-h-[112px] rounded-2xl border border-gray-200 bg-white p-4 shadow-xl">
-            <div className="flex w-full items-center gap-4">
-              <div
-                className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${getStatusColor(
-                  cameraStatus
-                )}`}
-              >
-                {getStatusIcon(cameraStatus)}
-              </div>
-
-              <div className="min-w-0">
-                <h1 className="truncate text-sm font-semibold text-gray-700">
-                  Camera Connection
-                </h1>
-
-                <p
-                  className={`truncate text-sm font-bold ${getStatusTextColor(
-                    cameraStatus
-                  )}`}
-                >
-                  {cameraStatus}
-                </p>
-              </div>
+            <div className="hidden shrink-0 items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm sm:flex">
+              <span className="h-2.5 w-2.5 rounded-full bg-green-500"></span>
+              System Healthy
             </div>
-          </div>
+          </header>
 
-          {/* Battery Level Card */}
-          <div className="min-h-[112px] [&>*]:h-full">
-            <BatteryLevel />
-          </div>
+          {/* Status Cards */}
+          <section className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
+            <StatusBox title="Robot Connected" status={rosStatus} />
+            <StatusBox title="Camera Connected" status={cameraStatus} />
 
-          {/* Speed Level Card */}
-          <div className="min-h-[112px] [&>*]:h-full">
-            <SpeedLevel />
-          </div>
+            <div className="h-[92px] min-w-0 overflow-hidden [&>*]:!h-full [&>*]:!min-h-0 [&>*]:!w-full [&>*]:!max-w-none [&>*]:!p-3">
+              <BatteryLevel />
+            </div>
 
-          {/* Fire Detection Card */}
-          <div className="min-h-[112px] [&>*]:h-full">
-            <FireDetection />
-          </div>
-        </div>
+            <div className="h-[92px] min-w-0 overflow-hidden [&>*]:!h-full [&>*]:!min-h-0 [&>*]:!w-full [&>*]:!max-w-none [&>*]:!p-3">
+              <SpeedLevel />
+            </div>
 
-        {/* Display Section */}
-        <div className="w-full max-w-[1280px]">
-          <Display
-            setRosStatus={setRosStatus}
-            setCameraStatus={setCameraStatus}
-          />
-        </div>
+            <div className="h-[92px] min-w-0 overflow-hidden [&>*]:!h-full [&>*]:!min-h-0 [&>*]:!w-full [&>*]:!max-w-none [&>*]:!p-3">
+              <FireDetection />
+            </div>
+          </section>
 
-        {/* Control Section */}
-        <div className="w-full max-w-[1280px]">
-          <Control />
+          {/* Camera + Map Section */}
+          <section className="mt-5 min-w-0 overflow-hidden">
+            <Display
+              setRosStatus={setRosStatus}
+              setCameraStatus={setCameraStatus}
+            />
+          </section>
+
+          {/* Control Section */}
+          <section className="mt-5 min-w-0 overflow-hidden">
+            <Control />
+          </section>
         </div>
       </main>
-
-      <Setting />
     </div>
   );
 };

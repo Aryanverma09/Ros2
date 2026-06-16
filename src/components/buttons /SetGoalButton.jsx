@@ -87,7 +87,7 @@ const AutoNavigate = () => {
           onClick={handleAutoExplore}
           className="w-full max-w-[180px] rounded-lg bg-blue-500 px-4 py-2 text-sm font-semibold text-white shadow-md transition hover:bg-blue-600"
         >
-          Auto Explore
+          Automatic Mode
         </button>
 
         <button

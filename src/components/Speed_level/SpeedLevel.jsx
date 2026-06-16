@@ -6,26 +6,21 @@ const SpeedLevel = ({ rosbridgeUrl = "ws://localhost:9090" }) => {
   const [angularSpeed, setAngularSpeed] = useState(0);
   const [connected, setConnected] = useState(false);
 
-  const maxSpeed = .50; // TurtleBot3 safe max speed approx for UI bar
+  const maxSpeed = 0.5;
 
   useEffect(() => {
-    const ros = new ROSLIB.Ros({
-      url: rosbridgeUrl,
-    });
+    const ros = new ROSLIB.Ros({ url: rosbridgeUrl });
 
     ros.on("connection", () => {
       setConnected(true);
-      console.log("Connected to rosbridge for speed");
     });
 
-    ros.on("error", (err) => {
+    ros.on("error", () => {
       setConnected(false);
-      console.error("ROS speed connection error:", err);
     });
 
     ros.on("close", () => {
       setConnected(false);
-      console.log("ROS speed connection closed");
     });
 
     const odomTopic = new ROSLIB.Topic({
@@ -54,33 +49,35 @@ const SpeedLevel = ({ rosbridgeUrl = "ws://localhost:9090" }) => {
   const speedPercent = Math.min((speed / maxSpeed) * 100, 100);
 
   return (
-    <div className="self-start rounded-2xl border border-gray-200 bg-white p-4 shadow-xl">
-      <div className="mb-2 flex items-center justify-between gap-3">
-        <div>
-          <h1 className="text-sm font-semibold text-gray-700">Speed</h1>
+    <div className="flex h-full min-h-0 w-full flex-col justify-center overflow-hidden rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
+      <div className="flex items-center justify-between gap-3">
+        <div className="min-w-0">
+          <h2 className="truncate text-sm font-bold leading-none text-slate-800">
+            Speed
+          </h2>
 
-          <p className="text-sm font-bold text-blue-600">
+          <p className="mt-1 truncate text-xs font-bold text-blue-600">
             {speed.toFixed(2)} m/s
           </p>
         </div>
 
-        <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-100 text-sm text-blue-600">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-sm text-blue-600">
           🏎️
         </div>
       </div>
 
-      <div className="h-2.5 w-full overflow-hidden rounded-full bg-gray-200">
+      <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-slate-200">
         <div
           className="h-full rounded-full bg-blue-500 transition-all duration-500"
-          style={{
-            width: `${speedPercent}%`,
-          }}
+          style={{ width: `${speedPercent}%` }}
         />
       </div>
 
-      <div className="mt-2 flex items-center justify-between text-xs text-gray-500">
-        <span>{connected ? "ROS Connected" : "ROS Connecting..."}</span>
-        <span>{angularSpeed.toFixed(2)} rad/s</span>
+      <div className="mt-1 flex items-center justify-between gap-2 text-[11px] font-medium text-slate-500">
+        <span className="truncate">
+          {connected ? "ROS Connected" : "ROS Connecting..."}
+        </span>
+        <span className="shrink-0">{angularSpeed.toFixed(2)} rad/s</span>
       </div>
     </div>
   );

@@ -13,17 +13,14 @@ const FireDetection = ({ rosbridgeUrl = "ws://localhost:9090" }) => {
 
     ros.on("connection", () => {
       setConnected(true);
-      console.log("Connected to rosbridge for fire detection");
     });
 
-    ros.on("error", (error) => {
+    ros.on("error", () => {
       setConnected(false);
-      console.error("ROS fire detection connection error:", error);
     });
 
     ros.on("close", () => {
       setConnected(false);
-      console.log("ROS fire detection connection closed");
     });
 
     const fireTopic = new ROSLIB.Topic({
@@ -48,62 +45,60 @@ const FireDetection = ({ rosbridgeUrl = "ws://localhost:9090" }) => {
     };
   }, [rosbridgeUrl]);
 
+  const statusText = fireDetected
+    ? "Fire Detected"
+    : connected
+      ? "Scanning..."
+      : "Retrying...";
+
+  const subText = fireDetected
+    ? "Alert active"
+    : connected
+      ? "No fire detected"
+      : "Waiting for robot";
+
+  const cardColor = fireDetected
+    ? "border-red-300 bg-red-50"
+    : "border-slate-200 bg-white";
+
+  const iconColor = fireDetected
+    ? "bg-red-100 text-red-600"
+    : connected
+      ? "bg-green-100 text-green-600"
+      : "bg-yellow-100 text-yellow-600";
+
+  const textColor = fireDetected
+    ? "text-red-600"
+    : connected
+      ? "text-green-600"
+      : "text-yellow-600";
+
   return (
-    <div className="relative h-full">
-      {/* Fire Detection Card */}
+    <>
       <div
-        className={`flex h-full min-h-[112px] rounded-2xl border bg-white p-4 shadow-xl transition-all duration-300 ${
-          fireDetected
-            ? "border-red-400 shadow-red-200"
-            : "border-gray-200"
-        }`}
+        className={`relative flex h-full min-h-0 w-full overflow-hidden rounded-2xl border p-3 shadow-sm ${cardColor}`}
       >
-        <div className="flex w-full items-center justify-between gap-4">
-          <div className="min-w-0">
-            <h2 className="truncate text-sm font-bold text-gray-900">
-              Fire Detection
-            </h2>
+        <div className="min-w-0 pr-11">
+          <h2 className="truncate text-sm font-bold leading-none text-slate-900">
+            Fire Detection
+          </h2>
 
-            <p
-              className={`mt-1 truncate text-sm font-bold ${
-                fireDetected
-                  ? "text-red-600"
-                  : connected
-                    ? "text-green-600"
-                    : "text-yellow-600"
-              }`}
-            >
-              {fireDetected
-                ? "Fire Detected"
-                : connected
-                  ? "Scanning..."
-                  : "Retrying..."}
-            </p>
+          <p className={`mt-1 truncate text-xs font-bold ${textColor}`}>
+            {statusText}
+          </p>
 
-            <p className="mt-3 line-clamp-2 text-xs font-medium text-gray-500">
-              {fireDetected
-                ? "Fire detected in camera view"
-                : connected
-                  ? "No fire detected"
-                  : "Waiting for ROS connection"}
-            </p>
-          </div>
+          <p className="mt-1 truncate text-[11px] font-medium text-slate-500">
+            {subText}
+          </p>
+        </div>
 
-          <div
-            className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-lg ${
-              fireDetected
-                ? "bg-red-100 text-red-600"
-                : connected
-                  ? "bg-green-100 text-green-600"
-                  : "bg-yellow-100 text-yellow-600"
-            }`}
-          >
-            {fireDetected ? "🔥" : connected ? "🟢" : "⚠️"}
-          </div>
+        <div
+          className={`absolute right-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-xl text-sm ${iconColor}`}
+        >
+          {fireDetected ? "🔥" : connected ? "●" : "⚠️"}
         </div>
       </div>
 
-      {/* Small Toast Alert */}
       {fireDetected && !dismissed && (
         <div className="pointer-events-none fixed right-6 top-24 z-[9999] w-[320px] max-w-[calc(100vw-3rem)]">
           <div className="pointer-events-auto rounded-2xl border border-red-300 bg-red-600 p-4 text-white shadow-2xl">
@@ -114,9 +109,7 @@ const FireDetection = ({ rosbridgeUrl = "ws://localhost:9090" }) => {
 
               <div className="min-w-0 flex-1">
                 <div className="flex items-start justify-between gap-3">
-                  <h2 className="text-base font-extrabold">
-                    Fire Detected
-                  </h2>
+                  <h2 className="text-base font-extrabold">Fire Detected</h2>
 
                   <button
                     type="button"
@@ -128,14 +121,14 @@ const FireDetection = ({ rosbridgeUrl = "ws://localhost:9090" }) => {
                 </div>
 
                 <p className="mt-1 text-sm font-medium text-red-50">
-                  TurtleBot camera detected fire in the environment.
+                  Robot camera detected fire in the environment.
                 </p>
               </div>
             </div>
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

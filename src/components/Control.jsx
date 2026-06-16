@@ -248,7 +248,7 @@ const Control = () => {
 
         {/* Actions */}
         <div className="flex min-h-[190px] flex-col items-center justify-center gap-3 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm [&>*]:w-full">
-          <h1 className="text-center font-bold">Action</h1>
+          <h1 className="text-center font-bold">Modes</h1>
           <SaveMap />
           <AutoNavigate />
         </div>
