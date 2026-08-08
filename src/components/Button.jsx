@@ -85,10 +85,10 @@ const Button = ({ publish }) => {
       {/* UP */}
       <button
         className={controlBtn}
-        onMouseDown={() => startPublishing(0.5, 0)}
+        onMouseDown={() => startPublishing(-0.5,0)}
         onMouseUp={stopPublishing}
         onMouseLeave={stopPublishing}
-        onTouchStart={() => startPublishing(0.5, 0)}
+        onTouchStart={() => startPublishing( -0.5,0)}
         onTouchEnd={stopPublishing}
       >
         <MoveUp className="text-white" />
@@ -129,10 +129,10 @@ const Button = ({ publish }) => {
       {/* DOWN */}
       <button
         className={controlBtn}
-        onMouseDown={() => startPublishing(-0.5, 0)}
+        onMouseDown={() => startPublishing(0.5, 0)}
         onMouseUp={stopPublishing}
         onMouseLeave={stopPublishing}
-        onTouchStart={() => startPublishing(-0.5, 0)}
+        onTouchStart={() => startPublishing(0.5, 0)}
         onTouchEnd={stopPublishing}
       >
         <MoveDown className="text-white" />
