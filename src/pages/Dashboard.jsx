@@ -7,6 +7,7 @@ import BatteryLevel from "../components/battery _level/BatteryLevel";
 import SpeedLevel from "../components/Speed_level/SpeedLevel";
 import FireDetection from "../components/fire_detection/FireDetection";
 import Sidebar from "../components/layout/Sidebar";
+import Login from "./Login";
 
 const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);

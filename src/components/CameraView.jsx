@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 
 const STREAM_URL =
-  "http://localhost:8080/stream?topic=/camera/image_raw&transport=compressed";
+  "http://192.168.1.14:8080/stream?topic=/image_raw&transport=compressed";
 
 const CameraView = ({ setCameraStatus = () => {} }) => {
   const [reloadKey, setReloadKey] = useState(Date.now());
@@ -47,7 +47,7 @@ const CameraView = ({ setCameraStatus = () => {} }) => {
         key={reloadKey}
         src={`${STREAM_URL}&reload=${reloadKey}`}
         alt="Live robot camera feed"
-        className="h-full w-full object-contain"
+        className="h-full w-full object-contain rotate-180"
         draggable="false"
         onLoad={() => updateStatus("Connected")}
         onError={retryStream}

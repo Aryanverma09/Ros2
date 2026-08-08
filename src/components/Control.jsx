@@ -25,7 +25,7 @@ const Control = () => {
       setRosStatus("Connecting...");
 
       const ros = new ROSLIB.Ros({
-        url: "ws://localhost:9090",
+        url: "ws://192.168.1.14:9090",
       });
 
       rosRef.current = ros;
@@ -144,116 +144,96 @@ const Control = () => {
   };
 
   return (
-    <section className="relative mx-auto w-full max-w-[1280px] rounded-3xl border border-gray-200 bg-white p-4 shadow-2xl sm:p-5 lg:p-6">
-      {/* Header */}
-      {/* <div className="mb-4 flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 pb-4">
-        <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-            🎮
+    <section className="relative mx-auto w-[min(96vw,80rem)] rounded-[clamp(1rem,2vw,1.5rem)] border border-gray-200 bg-white p-[clamp(0.75rem,1.4vw,1.5rem)] shadow-2xl">
+  {/* Main Responsive Control Layout */}
+  <div className="grid w-full grid-cols-1 gap-[clamp(0.75rem,1.4vw,1.25rem)] sm:grid-cols-2 xl:grid-cols-[minmax(180px,0.9fr)_minmax(220px,1.15fr)_minmax(220px,1fr)_minmax(180px,0.85fr)]">
+    {/* Joystick */}
+    <div className="flex min-h-[clamp(10rem,24dvh,15rem)] w-full items-center justify-center rounded-[clamp(0.9rem,1.5vw,1.25rem)] border border-gray-200 bg-white p-[clamp(0.75rem,1.4vw,1rem)] shadow-sm">
+      <JoyStick publish={publish} />
+    </div>
+
+    {/* Direction Buttons */}
+    <div className="flex min-h-[clamp(10rem,24dvh,15rem)] w-full items-center justify-center rounded-[clamp(0.9rem,1.5vw,1.25rem)] border border-gray-200 bg-white p-[clamp(0.75rem,1.4vw,1rem)] shadow-sm">
+      <Button publish={publish} />
+    </div>
+
+    {/* Velocity Cards */}
+    <div className="flex min-h-[clamp(10rem,24dvh,15rem)] w-full flex-col justify-center gap-[clamp(0.7rem,1.2vw,1rem)] rounded-[clamp(0.9rem,1.5vw,1.25rem)] border border-gray-200 bg-white p-[clamp(0.75rem,1.4vw,1rem)] shadow-sm">
+      {/* Velocity */}
+      <div className="rounded-[clamp(0.9rem,1.5vw,1.25rem)] border border-gray-100 bg-gray-50 p-[clamp(0.75rem,1.2vw,1rem)] shadow-sm">
+        <div className="flex items-center gap-[clamp(0.75rem,1.5vw,1rem)]">
+          <div className="flex size-[clamp(2.5rem,4vw,2.9rem)] shrink-0 items-center justify-center rounded-[clamp(0.8rem,1.3vw,1rem)] bg-white shadow-sm">
+            <svg
+              className="size-[clamp(1.25rem,2vw,1.5rem)] text-gray-700"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path d="M12 14l4-4" />
+              <path d="M3.34 19a10 10 0 1 1 17.32 0" />
+              <path d="M12 19h.01" />
+            </svg>
           </div>
 
-          <h2 className="text-base font-bold text-gray-900 sm:text-lg">
-            Manual Control
-          </h2>
-        </div>
-
-        <div
-          className={`rounded-full px-3 py-1 text-xs font-semibold ${
-            rosStatus === "Connected"
-              ? "bg-green-100 text-green-700"
-              : rosStatus === "Error"
-              ? "bg-red-100 text-red-700"
-              : "bg-yellow-100 text-yellow-700"
-          }`}
-        >
-          ROS: {rosStatus}
-        </div>
-      </div> */}
-
-      {/* Main Responsive Control Layout */}
-      <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-[1fr_1.15fr_1fr_0.9fr]">
-        {/* Joystick */}
-        <div className="flex min-h-[190px] items-center justify-center rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
-          <JoyStick publish={publish} />
-        </div>
-
-        {/* Direction Buttons */}
-        <div className="flex min-h-[190px] items-center justify-center rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
-          <Button publish={publish} />
-        </div>
-
-        {/* Velocity Cards */}
-        <div className="flex min-h-[190px] flex-col justify-center gap-4 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
-          {/* Velocity */}
-          <div className="rounded-2xl border border-gray-100 bg-gray-50 p-4 shadow-sm">
-            <div className="flex items-center gap-4">
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white shadow-sm">
-                <svg
-                  className="h-6 w-6 text-gray-700"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path d="M12 14l4-4" />
-                  <path d="M3.34 19a10 10 0 1 1 17.32 0" />
-                  <path d="M12 19h.01" />
-                </svg>
-              </div>
-
-              <div>
-                <p className="text-sm font-semibold text-gray-500">Velocity</p>
-                <h3 className="text-2xl font-bold text-gray-900">
-                  {velocity.toFixed(1)}
-                  <span className="ml-1 text-sm font-semibold text-gray-500">
-                    m/s
-                  </span>
-                </h3>
-              </div>
-            </div>
+          <div className="min-w-0">
+            <p className="text-[clamp(0.75rem,1.2vw,0.875rem)] font-semibold text-gray-500">
+              Velocity
+            </p>
+            <h3 className="text-[clamp(1.35rem,2.4vw,1.6rem)] font-bold leading-tight text-gray-900">
+              {velocity.toFixed(1)}
+              <span className="ml-1 text-[clamp(0.75rem,1.2vw,0.875rem)] font-semibold text-gray-500">
+                m/s
+              </span>
+            </h3>
           </div>
-
-          {/* Angular Velocity */}
-          <div className="rounded-2xl border border-gray-100 bg-gray-50 p-4 shadow-sm">
-            <div className="flex items-center gap-4">
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white shadow-sm">
-                <svg
-                  className="h-6 w-6 text-gray-700"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
-                  <path d="M3 21v-5h5" />
-                  <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
-                  <path d="M21 3v5h-5" />
-                </svg>
-              </div>
-
-              <div>
-                <p className="text-sm font-semibold text-gray-500">
-                  Angular Velocity
-                </p>
-                <h3 className="text-2xl font-bold text-gray-900">
-                  {angularVelocity.toFixed(1)}
-                  <span className="ml-1 text-sm font-semibold text-gray-500">
-                    rad/s
-                  </span>
-                </h3>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Actions */}
-        <div className="flex min-h-[190px] flex-col items-center justify-center gap-3 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm [&>*]:w-full">
-          <h1 className="text-center font-bold">Modes</h1>
-          <SaveMap />
-          <AutoNavigate />
         </div>
       </div>
-    </section>
+
+      {/* Angular Velocity */}
+      <div className="rounded-[clamp(0.9rem,1.5vw,1.25rem)] border border-gray-100 bg-gray-50 p-[clamp(0.75rem,1.2vw,1rem)] shadow-sm">
+        <div className="flex items-center gap-[clamp(0.75rem,1.5vw,1rem)]">
+          <div className="flex size-[clamp(2.5rem,4vw,2.9rem)] shrink-0 items-center justify-center rounded-[clamp(0.8rem,1.3vw,1rem)] bg-white shadow-sm">
+            <svg
+              className="size-[clamp(1.25rem,2vw,1.5rem)] text-gray-700"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
+              <path d="M3 21v-5h5" />
+              <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+              <path d="M21 3v5h-5" />
+            </svg>
+          </div>
+
+          <div className="min-w-0">
+            <p className="text-[clamp(0.75rem,1.2vw,0.875rem)] font-semibold text-gray-500">
+              Angular Velocity
+            </p>
+            <h3 className="text-[clamp(1.35rem,2.4vw,1.6rem)] font-bold leading-tight text-gray-900">
+              {angularVelocity.toFixed(1)}
+              <span className="ml-1 text-[clamp(0.75rem,1.2vw,0.875rem)] font-semibold text-gray-500">
+                rad/s
+              </span>
+            </h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {/* Actions */}
+    <div className="flex min-h-[clamp(10rem,24dvh,15rem)] w-full flex-col items-center justify-center gap-[clamp(0.65rem,1.2vw,0.9rem)] rounded-[clamp(0.9rem,1.5vw,1.25rem)] border border-gray-200 bg-white p-[clamp(0.75rem,1.4vw,1rem)] shadow-sm [&>*]:w-full">
+      <h1 className="text-center text-[clamp(0.9rem,1.5vw,1rem)] font-bold text-gray-900">
+        Modes
+      </h1>
+
+      <SaveMap />
+      <AutoNavigate />
+    </div>
+  </div>
+</section>
   );
 };
 

@@ -1,12 +1,29 @@
 import React from "react";
-import Dashboard from "./pages/Dashboard";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
-const App = () => {
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
+
+function App() {
   return (
-    <div className="h-screen w-[75vw]flex flex-col justify-center items-center gap-5">
-      <Dashboard />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        {/* <Route path="/" element={<Navigate to="/login" replace />} />
+
+        <Route path="/login" element={<Login />} /> */}
+
+        {/* <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+            </ProtectedRoute>
+          }
+        /> */}
+      </Routes>
+          <Dashboard />
+    </BrowserRouter>
   );
-};
+}
 
 export default App;

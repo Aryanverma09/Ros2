@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as ROSLIB from "roslib";
 
-const ROSBRIDGE_URL = "ws://localhost:9090";
+const ROSBRIDGE_URL = "ws://192.168.1.14:9090";
 
 const MapView = ({ setRosStatus = () => {} }) => {
   const canvasRef = useRef(null);
@@ -306,13 +306,13 @@ const MapView = ({ setRosStatus = () => {} }) => {
         }}
       />
 
-      {!mapRef.current && (
+      {/* {!mapRef.current && (
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
           <div className="rounded-xl border border-white/20 bg-black/70 px-5 py-3 text-center text-sm font-semibold text-white backdrop-blur-md">
             Waiting for /map
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };
